@@ -113,7 +113,7 @@ export default function Home() {
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
       {/* NAVIGATION — transparent over hero, opaque when scrolled */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-white/95 backdrop-blur-md border-b border-[#EAEAEA]" : "bg-transparent"}`}>
-        <div className="px-5 h-16 flex justify-between items-center">
+        <div className="px-7 min-h-[72px] py-2.5 flex justify-between items-center">
           <Image
             src="/smurra-logo.png"
             alt="Smurra"
@@ -188,7 +188,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-2xl px-5 pb-20 sm:pb-24">
+        <div className="relative z-10 max-w-2xl px-7 pb-20 sm:pb-24">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
