@@ -113,7 +113,7 @@ export default function Home() {
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
       {/* NAVIGATION — transparent over hero, opaque when scrolled */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-white/95 backdrop-blur-md border-b border-[#EAEAEA]" : "bg-transparent"}`}>
-        <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
           <Image
             src="/smurra-logo.png"
             alt="Smurra"
@@ -176,7 +176,7 @@ export default function Home() {
         {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/office.jpg"
+            src="/office.webp"
             alt=""
             fill
             className="object-cover object-center"
@@ -188,7 +188,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 sm:pb-24">
+        <div className="relative z-10 max-w-4xl px-4 pb-20 sm:pb-24">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
