@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import {
@@ -94,36 +94,61 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<ServiceTab>("personas");
   const [formTab, setFormTab] = useState<FormTab>("vehiculos");
 
+  const [scrolled, setScrolled] = useState(false);
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
   };
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const specialIcons = [Building2, Trophy, Globe];
 
   return (
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
-      {/* NAVIGATION */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-[#EAEAEA]">
+      {/* NAVIGATION — transparent over hero, opaque when scrolled */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-white/95 backdrop-blur-md border-b border-[#EAEAEA]" : "bg-transparent"}`}>
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
-          <Image src="/smurra-logo.png" alt="Smurra" width={140} height={40} className="h-9 w-auto brightness-0" priority />
+          <Image
+            src="/smurra-logo.png"
+            alt="Smurra"
+            width={140}
+            height={40}
+            className={`h-9 w-auto transition-all duration-500 ${scrolled ? "brightness-0" : "brightness-0 invert"}`}
+            priority
+          />
 
           <div className="hidden md:flex items-center gap-6">
             {(["servicios", "nosotros", "especializaciones", "testimonios"] as const).map((k) => (
-              <button key={k} onClick={() => scrollTo(k)} className="text-sm text-[#787774] hover:text-[#2F3437] transition-colors cursor-pointer capitalize">
+              <button
+                key={k}
+                onClick={() => scrollTo(k)}
+                className={`text-sm transition-colors cursor-pointer capitalize ${scrolled ? "text-[#787774] hover:text-[#2F3437]" : "text-white/80 hover:text-white"}`}
+              >
                 {tt.nav[k]}
               </button>
             ))}
-            <button onClick={toggleLang} className="text-xs font-medium text-[#787774] hover:text-[#2F3437] cursor-pointer uppercase tracking-wider px-2 py-1 rounded border border-[#EAEAEA]">
+            <button
+              onClick={toggleLang}
+              className={`text-xs font-medium cursor-pointer uppercase tracking-wider px-2 py-1 rounded border transition-colors ${scrolled ? "text-[#787774] border-[#EAEAEA] hover:text-[#2F3437]" : "text-white/70 border-white/20 hover:text-white hover:border-white/40"}`}
+            >
               {lang === "es" ? "EN" : "ES"}
             </button>
-            <Button onClick={() => scrollTo("contacto")} className="cursor-pointer rounded-md bg-[#111111] hover:bg-[#333333] text-white text-sm px-5 h-9">
+            <Button
+              onClick={() => scrollTo("contacto")}
+              className={`cursor-pointer rounded-md text-sm px-5 h-9 transition-colors ${scrolled ? "bg-[#111111] hover:bg-[#333333] text-white" : "bg-white text-[#2B496C] hover:bg-white/90"}`}
+            >
               {tt.nav.cotizar}
             </Button>
           </div>
 
           <button className="md:hidden p-1 cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={22} className={scrolled ? "text-[#2F3437]" : "text-white"} /> : <Menu size={22} className={scrolled ? "text-[#2F3437]" : "text-white"} />}
           </button>
         </div>
 
@@ -146,38 +171,103 @@ export default function Home() {
         )}
       </nav>
 
-      {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center bg-[#2B496C] overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, #ffffff 0%, transparent 70%)", transform: "translate(-20%, -30%)" }} />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.04] blur-[100px] pointer-events-none" style={{ background: "radial-gradient(circle, #E1F3FE 0%, transparent 70%)", transform: "translate(20%, 30%)" }} />
+      {/* HERO — full-bleed image + dark overlay */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/office.jpg"
+            alt=""
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="100vw"
+          />
+          {/* Dark navy overlay */}
+          <div className="absolute inset-0 bg-[#0F1A2E]/75" />
+          {/* Subtle radial glow behind text */}
+          <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at center, #2B496C 0%, transparent 70%)" }} />
+        </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="mb-10">
-            <Image src="/smurra-logo.png" alt="Smurra" width={200} height={120} className="h-28 w-auto mx-auto" priority />
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center pt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-10"
+          >
+            <Image
+              src="/smurra-logo.png"
+              alt="Smurra"
+              width={220}
+              height={120}
+              className="h-32 w-auto mx-auto"
+              priority
+            />
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08] tracking-tight font-[family-name:var(--font-playfair)]">
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-white leading-[1.08] tracking-tight font-[family-name:var(--font-playfair)]"
+          >
             {tt.hero.title}
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }} className="mt-6 text-lg sm:text-xl text-white/65 max-w-2xl mx-auto leading-relaxed">
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 text-lg sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed font-[family-name:var(--font-playfair)]"
+          >
             {tt.hero.subtitle}
           </motion.p>
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }} className="mt-4 text-sm uppercase tracking-[0.2em] text-[#1F6C9F] font-medium">
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-5 text-sm uppercase tracking-[0.2em] text-[#C4A35A] font-medium"
+          >
             {tt.hero.guru}
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }} className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={() => scrollTo("contacto")} className="cursor-pointer rounded-md bg-white text-[#2B496C] hover:bg-[#F7F6F3] text-sm px-7 h-11">
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Button
+              onClick={() => scrollTo("contacto")}
+              className="cursor-pointer rounded-md bg-white text-[#2B496C] hover:bg-[#F7F6F3] text-sm px-8 h-12 shadow-[0_2px_20px_rgba(0,0,0,0.15)]"
+            >
               {tt.hero.cta1} <ChevronRight className="ml-1.5 h-4 w-4" />
             </Button>
-            <Button variant="outline" onClick={() => scrollTo("nosotros")} className="cursor-pointer rounded-md border-white/20 text-white hover:bg-white/[0.06] text-sm px-7 h-11">
+            <Button
+              variant="outline"
+              onClick={() => scrollTo("nosotros")}
+              className="cursor-pointer rounded-md border-white/30 text-white hover:bg-white/[0.08] text-sm px-8 h-12"
+            >
               {tt.hero.cta2}
             </Button>
           </motion.div>
         </div>
 
-        <motion.div className="absolute bottom-10 left-1/2 -translate-x-1/2" animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
-          <div className="w-5 h-8 border border-white/20 rounded-full flex justify-center">
-            <motion.div className="w-1 h-1 bg-white/60 rounded-full mt-2" animate={{ y: [0, 12, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="w-5 h-8 border border-white/25 rounded-full flex justify-center">
+            <motion.div
+              className="w-1 h-1 bg-white/50 rounded-full mt-2"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
           </div>
         </motion.div>
       </section>
