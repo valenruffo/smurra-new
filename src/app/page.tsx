@@ -119,7 +119,7 @@ export default function Home() {
             alt="Smurra"
             width={140}
             height={40}
-            className={`h-9 w-auto transition-all duration-500 ${scrolled ? "brightness-0" : "brightness-0 invert"}`}
+            className={`h-10 w-auto transition-all duration-500 ${scrolled ? "brightness-0" : "brightness-0 invert"}`}
             priority
           />
 
@@ -128,7 +128,7 @@ export default function Home() {
               <button
                 key={k}
                 onClick={() => scrollTo(k)}
-                className={`text-sm transition-colors cursor-pointer capitalize ${scrolled ? "text-[#787774] hover:text-[#2F3437]" : "text-white/80 hover:text-white"}`}
+                className={`text-[15px] transition-colors cursor-pointer capitalize ${scrolled ? "text-[#787774] hover:text-[#2F3437]" : "text-white/80 hover:text-white"}`}
               >
                 {tt.nav[k]}
               </button>
@@ -171,8 +171,8 @@ export default function Home() {
         )}
       </nav>
 
-      {/* HERO — full-bleed image + dark overlay */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* HERO — full-bleed image + dark overlay, text bottom-left */}
+      <section className="relative min-h-screen flex items-end overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -183,35 +183,17 @@ export default function Home() {
             priority
             sizes="100vw"
           />
-          {/* Dark navy overlay */}
-          <div className="absolute inset-0 bg-[#0F1A2E]/75" />
-          {/* Subtle radial glow behind text */}
-          <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at center, #2B496C 0%, transparent 70%)" }} />
+          {/* Dark navy overlay — lighter at bottom-left for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F1A2E]/90 via-[#0F1A2E]/60 to-[#0F1A2E]/40" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center pt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-10"
-          >
-            <Image
-              src="/smurra-logo.png"
-              alt="Smurra"
-              width={220}
-              height={120}
-              className="h-32 w-auto mx-auto"
-              priority
-            />
-          </motion.div>
-
+        <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 sm:pb-24">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-white leading-[1.08] tracking-tight font-[family-name:var(--font-playfair)]"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold italic text-white leading-[1.08] tracking-tight font-[family-name:var(--font-playfair)]"
           >
             {tt.hero.title}
           </motion.h1>
@@ -220,7 +202,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 text-lg sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed font-[family-name:var(--font-playfair)]"
+            className="mt-4 text-base sm:text-lg text-white/55 max-w-xl leading-relaxed font-[family-name:var(--font-playfair)]"
           >
             {tt.hero.subtitle}
           </motion.p>
@@ -229,7 +211,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-5 text-sm uppercase tracking-[0.2em] text-[#C4A35A] font-medium"
+            className="mt-4 text-sm uppercase tracking-[0.2em] text-[#C4A35A] font-medium"
           >
             {tt.hero.guru}
           </motion.p>
@@ -238,7 +220,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
+            className="mt-8 flex flex-col sm:flex-row gap-4"
           >
             <Button
               onClick={() => scrollTo("contacto")}
@@ -249,7 +231,7 @@ export default function Home() {
             <Button
               variant="outline"
               onClick={() => scrollTo("nosotros")}
-              className="cursor-pointer rounded-md border-white/30 text-white hover:bg-white/[0.08] text-sm px-8 h-12"
+              className="cursor-pointer rounded-md border-white/25 text-white hover:bg-white/[0.08] text-sm px-8 h-12"
             >
               {tt.hero.cta2}
             </Button>
@@ -258,7 +240,7 @@ export default function Home() {
 
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
